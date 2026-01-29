@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
-import { getPostsByTag, getAllTags, formatDate } from '@/lib/posts';
+import { getPostsByTag, getAllTags } from '@/lib/posts';
+import { formatDate } from '@/lib/utils';
 import { ThemeToggle } from '@/components/theme-toggle';
 import { ArrowLeft, Tag, Search } from 'lucide-react';
 
