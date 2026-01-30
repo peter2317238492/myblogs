@@ -16,7 +16,8 @@ export async function generateStaticParams() {
 
 export default async function PostPage({ params }: Props) {
   const { slug } = await params;
-  const post = getPostBySlug(slug);
+  const decodedSlug = decodeURIComponent(slug);
+  const post = getPostBySlug(decodedSlug);
 
   if (!post) {
     notFound();
