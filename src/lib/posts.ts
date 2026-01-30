@@ -4,6 +4,7 @@ import matter from 'gray-matter';
 import { remark } from 'remark';
 import html from 'remark-html';
 import remarkGfm from 'remark-gfm';
+import { visit } from 'unist-util-visit';
 
 const postsDirectory = path.join(process.cwd(), 'posts');
 
@@ -85,7 +86,20 @@ export function getPostBySlug(slug: string): Post | null {
 }
 
 export async function markdownToHtml(markdown: string): Promise<string> {
-  const result = await remark().use(remarkGfm).use(html).process(markdown);
+  const result = await remark()
+    .use(remarkGfm)
+    .use(() => (tree) => {
+      visit(tree, 'image', (node: any) => {
+        if (typeof node.url !== 'string') return;
+        if (node.url.startsWith('./images/')) {
+          node.url = `/images/${node.url.slice('./images/'.length)}`;
+        } else if (node.url.startsWith('images/')) {
+          node.url = `/images/${node.url.slice('images/'.length)}`;
+        }
+      });
+    })
+    .use(html)
+    .process(markdown);
   return result.toString();
 }
 
